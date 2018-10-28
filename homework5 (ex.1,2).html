@@ -1,0 +1,109 @@
+<html>
+<canvas id="game"> </canvas>
+
+<script>
+const canvas =document.getElementById('game');
+  canvas.width= 1200;
+  canvas.height= 500;
+const context = canvas.getContext("2d")
+
+
+
+const rand = function(num) {
+  return Math.floor(Math.random() * num); //Math.floor returns whole part of the number //Math.random [0,1)
+};
+  
+  
+
+const createBoxes = function(count, canvasWidth, canvasHeight) {
+  
+  let arr = [];
+  const colorArray = ['Bisque ','CornflowerBlue','aquamarine','brown',"DarkSlateGray ","FireBrick","LightSeaGreen"];
+  const w=50;
+  const h=50;
+  for(let i=0; i<count; i++){
+  
+    let obj ={ x: rand(canvas.width-w),
+           y: rand(canvas.height-h),
+           width: w,
+           height: h,
+           xDelta: (Math.random()-0.5)*20, // whatever you want
+           yDelta: (Math.random()-0.5)*20, // whatever you want
+           color: colorArray[rand(colorArray.length)],
+              
+              draw: function(){
+         	context.fillStyle= this.color;
+            context.fillRect(this.x,this.y,this.width,this.height);
+           		},
+              update: function(){
+                
+                   
+                this.x+=this.xDelta;
+                this.y+=this.yDelta;
+                if(this.x+this.width>= canvas.width ){
+                this.color= colorArray[rand(colorArray.length)];
+                  this.xDelta=(Math.random()*15)*-1;
+                  
+                  }
+                if(this.y+this.height>=canvas.height){
+                   this.color= colorArray[rand(colorArray.length)];
+                this.yDelta=(Math.random()*15)*-1;
+                }
+                if(this.x<=0){
+                   this.color= colorArray[rand(colorArray.length)];
+                this.xDelta=(Math.random()*15)*1;
+                }
+                if(this.y<=0){
+                   this.color= colorArray[rand(colorArray.length)];
+                 this.yDelta=(Math.random()*15)*1;
+                }
+                
+                
+              }
+             }
+   	 arr[i]=obj;
+     }
+	 return arr;
+  }
+	
+let array  = createBoxes(15,canvas.width, canvas.height);
+  
+ const draw=function(){
+ 	
+    context.fillStyle= 'white';
+    context.fillRect(0,0,canvas.width,canvas.height);
+    context.strokeStyle= 'black';
+	context.lineWidth=4;
+ 	context.strokeRect  (0,0,canvas.width,canvas.height);
+   //rendering
+   for(let i=0; i<array.length; i++){
+  	  array[i].draw();
+   }
+ };
+  
+ const update = function(){
+    
+    for(let i=0; i<array.length; i++){
+  	   array[i].update();  
+    if (this.x>=canvas.width){
+                  this.xDelta=this.xDelta*-1;
+                                  }
+    if(this.y>=canvas.heigth){
+     this.yDelta=this.yDelta*-1;
+                }	   
+    }
+  };
+    
+     
+  const loop = function(){ 
+    draw();
+    update();
+       
+      requestAnimationFrame(loop);	 		
+  };  
+   
+  loop(); 
+               
+   
+</script>  
+ </html>
